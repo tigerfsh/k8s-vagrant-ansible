@@ -2,6 +2,12 @@
 - hosts: all
   become: true
   tasks:
+  - name: cp /etc/apt/sources.list /etc/apt/sources.list.bak
+    command: cp /etc/apt/sources.list /etc/apt/sources.list.bak
+  
+  - name: "Using aliyun apt source!"
+    command: cp /home/vagrant/share/sources.list /etc/apt/sources.list
+
   - name: Install packages that allow apt to be used over HTTPS
     apt:
       name: "{{ packages }}"
@@ -17,12 +23,12 @@
 
   - name: Add an apt signing key for Docker
     apt_key:
-      url: https://download.docker.com/linux/ubuntu/gpg
+      url: https://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg
       state: present
 
   - name: Add apt repository for stable version
     apt_repository:
-      repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
+      repo: deb [arch=amd64] https://mirrors.aliyun.com/docker-ce/linux/ubuntu xenial stable
       state: present
 
   - name: Install docker and its dependecies
@@ -56,12 +62,12 @@
     when: ansible_swaptotal_mb > 0
   - name: Add an apt signing key for Kubernetes
     apt_key:
-      url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+      url: https://mirrors.aliyun.com/kubernetes/apt/doc/apt-key.gpg
       state: present
 
   - name: Adding apt repository for Kubernetes
     apt_repository:
-      repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+      repo: deb https://mirrors.aliyun.com/kubernetes/apt/ kubernetes-xenial main
       state: present
       filename: kubernetes.list
 
@@ -86,11 +92,6 @@
       name: kubelet
       daemon_reload: yes
       state: restarted
-  - name: Copy the join command to server location
-    copy: src=join-command dest=/tmp/join-command.sh mode=0777
-
-  - name: Join the node to cluster
-    command: sh /tmp/join-command.sh
 
   handlers:
     - name: docker status
