@@ -59,7 +59,7 @@ EOF
 sudo apt update 
 sudo apt-get install -y kubelet kubeadm kubectl
 
-sudo kubeadm init --image-repository registry.aliyuncs.com/google_containers --apiserver-advertise-address="192.168.50.10" --apiserver-cert-extra-sans="192.168.50.10"  --node-name k8s-master --pod-network-cidr=192.168.0.0/16
+sudo kubeadm init --image-repository registry.aliyuncs.com/google_containers --apiserver-advertise-address="192.168.1.6" --apiserver-cert-extra-sans="192.168.1.6"  --node-name k8s-master --pod-network-cidr=192.168.0.0/16
 
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
