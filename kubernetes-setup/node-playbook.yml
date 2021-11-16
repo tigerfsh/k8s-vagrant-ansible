@@ -2,11 +2,12 @@
 - hosts: all
   become: true
   tasks:
-  - name: cp /etc/apt/sources.list /etc/apt/sources.list.bak
-    command: cp /etc/apt/sources.list /etc/apt/sources.list.bak
-  
-  - name: "Using aliyun apt source!"
-    command: cp /home/vagrant/share/sources.list /etc/apt/sources.list
+  - name: Set /etc/apt/source.list
+    shell: |
+      echo 'deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ xenial main restricted universe multiverse
+      deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ xenial-updates main restricted universe multiverse
+      deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ xenial-backports main restricted universe multiverse
+      deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ xenial-security main restricted universe multiverse' > /etc/apt/sources.list
 
   - name: Install packages that allow apt to be used over HTTPS
     apt:
@@ -43,6 +44,16 @@
       - containerd.io
     notify:
       - docker status
+
+  - name: Set docker cgroup driver to systemd
+    shell: |
+      echo  '{"exec-opts": ["native.cgroupdriver=systemd"]}' > /etc/docker/daemon.json
+
+  - name: Restart docker
+    service:
+      name: docker
+      daemon_reload: yes
+      state: restarted
 
   - name: Add vagrant user to docker group
     user:
@@ -92,6 +103,11 @@
       name: kubelet
       daemon_reload: yes
       state: restarted
+  - name: Copy the join command to server location
+    copy: src=join-command dest=/tmp/join-command.sh mode=0777
+
+  - name: Join the node to cluster
+    command: sh /tmp/join-command.sh
 
   handlers:
     - name: docker status
