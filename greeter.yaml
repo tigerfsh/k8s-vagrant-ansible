@@ -17,6 +17,7 @@ spec:
       containers:
       - name: greeter
         image: ishankhare07/ingress-test:0.0.3
+        imagePullPolicy: IfNotPresent
         command: ["/go/bin/ingress-test"]
         ports:
           - containerPort: 8000
