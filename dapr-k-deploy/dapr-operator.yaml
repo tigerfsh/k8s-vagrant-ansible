@@ -1,0 +1,154 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    prometheus.io/path: /
+    prometheus.io/port: "9090"
+    prometheus.io/scrape: "true"
+  creationTimestamp: "2021-11-17T04:07:23Z"
+  generateName: dapr-operator-6c8cc99949-
+  labels:
+    app: dapr-operator
+    app.kubernetes.io/component: operator
+    app.kubernetes.io/managed-by: helm
+    app.kubernetes.io/name: dapr
+    app.kubernetes.io/part-of: dapr
+    app.kubernetes.io/version: 1.5.0
+    pod-template-hash: 6c8cc99949
+  name: dapr-operator-6c8cc99949-csdrg
+  namespace: dapr-system
+  ownerReferences:
+  - apiVersion: apps/v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: ReplicaSet
+    name: dapr-operator-6c8cc99949
+    uid: a931b232-ecd1-46cd-a48f-696346cdd2d4
+  resourceVersion: "1519"
+  uid: d6f79d75-fd1c-46fc-abfb-7dee95db870d
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: kubernetes.io/os
+            operator: In
+            values:
+            - linux
+  containers:
+  - args:
+    - --log-level
+    - info
+    - --enable-metrics
+    - --metrics-port
+    - "9090"
+    command:
+    - /operator
+    env:
+    - name: NAMESPACE
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: metadata.namespace
+    image: docker.io/daprio/dapr:1.5.0
+    imagePullPolicy: IfNotPresent
+    livenessProbe:
+      failureThreshold: 5
+      httpGet:
+        path: /healthz
+        port: 8080
+        scheme: HTTP
+      initialDelaySeconds: 3
+      periodSeconds: 3
+      successThreshold: 1
+      timeoutSeconds: 1
+    name: dapr-operator
+    ports:
+    - containerPort: 6500
+      protocol: TCP
+    - containerPort: 9090
+      name: metrics
+      protocol: TCP
+    readinessProbe:
+      failureThreshold: 5
+      httpGet:
+        path: /healthz
+        port: 8080
+        scheme: HTTP
+      initialDelaySeconds: 3
+      periodSeconds: 3
+      successThreshold: 1
+      timeoutSeconds: 1
+    resources: {}
+    securityContext:
+      runAsNonRoot: true
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /var/run/dapr/credentials
+      name: credentials
+      readOnly: true
+    - mountPath: /tmp/k8s-webhook-server/serving-certs
+      name: webhook-creds
+      readOnly: true
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-pmccg
+      readOnly: true
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  preemptionPolicy: PreemptLowerPriority
+  priority: 0
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext: {}
+  serviceAccount: dapr-operator
+  serviceAccountName: dapr-operator
+  terminationGracePeriodSeconds: 30
+  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 300
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 300
+  volumes:
+  - name: credentials
+    secret:
+      defaultMode: 420
+      secretName: dapr-trust-bundle
+  - name: webhook-creds
+    secret:
+      defaultMode: 420
+      secretName: dapr-webhook-cert
+  - name: kube-api-access-pmccg
+    projected:
+      defaultMode: 420
+      sources:
+      - serviceAccountToken:
+          expirationSeconds: 3607
+          path: token
+      - configMap:
+          items:
+          - key: ca.crt
+            path: ca.crt
+          name: kube-root-ca.crt
+      - downwardAPI:
+          items:
+          - fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+            path: namespace
+status:
+  conditions:
+  - lastProbeTime: null
+    lastTransitionTime: "2021-11-17T04:07:23Z"
+    message: '0/1 nodes are available: 1 node(s) had taint {node-role.kubernetes.io/master:
+      }, that the pod didn''t tolerate.'
+    reason: Unschedulable
+    status: "False"
+    type: PodScheduled
+  phase: Pending
+  qosClass: BestEffort
