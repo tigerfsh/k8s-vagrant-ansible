@@ -1,6 +1,6 @@
 sudo sed -i '/ swap / s/^/#/' /etc/fstab
 sudo swapoff -a
-sudo cp /etc/apt/sources.list /etc/apt/sources.list.bak
+sudo mv /etc/apt/sources.list /etc/apt/sources.list.bak
 
 sudo tee /etc/apt/sources.list <<-'EOF'
 deb http://mirrors.aliyun.com/ubuntu/ xenial main
