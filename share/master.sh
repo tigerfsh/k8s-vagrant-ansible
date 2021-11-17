@@ -81,3 +81,4 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 # 查询命令：kubectl describe  nodes k8s-master |grep Taints
 # 恢复调度：kubectl taint nodes k8s-master  node-role.kubernetes.io/master:NoSchedule-
 # 让master节点不参与调度：kubectl taint nodes k8s-master  node-role.kubernetes.io/master:NoSchedule
+# 手动执行'kubeadm init'，命令如下: sudo kubeadm init --pod-network-cidr 172.16.0.0/16     --image-repository registry.cn-hangzhou.aliyuncs.com/google_containers
