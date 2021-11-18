@@ -53,7 +53,7 @@ EOF
 sudo apt update 
 sudo apt-get install -y kubelet kubeadm kubectl
 
-sudo kubeadm init --image-repository registry.aliyuncs.com/google_containers --apiserver-advertise-address="192.168.1.6" --apiserver-cert-extra-sans="192.168.1.6"  --node-name k8s-master --pod-network-cidr=192.168.0.0/16
+sudo kubeadm init --image-repository registry.aliyuncs.com/google_containers --apiserver-advertise-address="192.168.1.6" --apiserver-cert-extra-sans="192.168.1.6"  --node-name fsh-l14 --pod-network-cidr=192.168.0.0/16
 
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
@@ -68,7 +68,6 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 # sudo docker load -i calico_pod.tar
 # kubectl apply -f calico.yaml 
 
-# Droped!
 # kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
 
 
@@ -78,7 +77,7 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 # kubeadm token create --print-join-command
 
 # master节点默认不参与调度
-# 查询命令：kubectl describe  nodes k8s-master |grep Taints
-# 恢复调度：kubectl taint nodes k8s-master  node-role.kubernetes.io/master:NoSchedule-
-# 让master节点不参与调度：kubectl taint nodes k8s-master  node-role.kubernetes.io/master:NoSchedule
-# 手动执行'kubeadm init'，命令如下: sudo kubeadm init --pod-network-cidr 172.16.0.0/16     --image-repository registry.cn-hangzhou.aliyuncs.com/google_containers
+# 查询命令：kubectl describe  nodes fsh-l14 |grep Taints
+# 恢复调度：kubectl taint nodes fsh-l14  node-role.kubernetes.io/master:NoSchedule-
+# 让master节点不参与调度：kubectl taint nodes fsh-l14  node-role.kubernetes.io/master:NoSchedule
+# 手动执行'kubeadm init'，命令如下: sudo kubeadm init --pod-network-cidr 172.16.0.0/16   --kubernetes-version=1.22.3  --image-repository registry.cn-hangzhou.aliyuncs.com/google_containers

@@ -1,0 +1,146 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+    meta.helm.sh/release-name: dapr
+    meta.helm.sh/release-namespace: dapr-system
+  creationTimestamp: "2021-11-06T07:20:20Z"
+  generation: 1
+  labels:
+    app: dapr-sidecar-injector
+    app.kubernetes.io/managed-by: Helm
+  name: dapr-sidecar-injector
+  namespace: dapr-system
+  resourceVersion: "113129"
+  uid: 8e487a81-b8e5-4814-9cad-324b7985598f
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: dapr-sidecar-injector
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        prometheus.io/path: /
+        prometheus.io/port: "9090"
+        prometheus.io/scrape: "true"
+      creationTimestamp: null
+      labels:
+        app: dapr-sidecar-injector
+        app.kubernetes.io/component: sidecar-injector
+        app.kubernetes.io/managed-by: helm
+        app.kubernetes.io/name: dapr
+        app.kubernetes.io/part-of: dapr
+        app.kubernetes.io/version: 1.4.3
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/os
+                operator: In
+                values:
+                - linux
+      containers:
+      - args:
+        - --log-level
+        - info
+        - --enable-metrics
+        - --metrics-port
+        - "9090"
+        command:
+        - /injector
+        env:
+        - name: TLS_CERT_FILE
+          value: /dapr/cert/tls.crt
+        - name: TLS_KEY_FILE
+          value: /dapr/cert/tls.key
+        - name: KUBE_CLUSTER_DOMAIN
+          value: cluster.local
+        - name: SIDECAR_IMAGE
+          value: docker.io/daprio/daprd:1.4.3
+        - name: SIDECAR_IMAGE_PULL_POLICY
+          value: IfNotPresent
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+        image: docker.io/daprio/dapr:1.4.3
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 5
+          httpGet:
+            path: /healthz
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 3
+          periodSeconds: 3
+          successThreshold: 1
+          timeoutSeconds: 1
+        name: dapr-sidecar-injector
+        ports:
+        - containerPort: 4000
+          name: https
+          protocol: TCP
+        - containerPort: 9090
+          name: metrics
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 5
+          httpGet:
+            path: /healthz
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 3
+          periodSeconds: 3
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources: {}
+        securityContext:
+          runAsNonRoot: true
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /dapr/cert
+          name: cert
+          readOnly: true
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccount: dapr-operator
+      serviceAccountName: dapr-operator
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: cert
+        secret:
+          defaultMode: 420
+          secretName: dapr-sidecar-injector-cert
+status:
+  conditions:
+  - lastTransitionTime: "2021-11-06T07:20:20Z"
+    lastUpdateTime: "2021-11-06T07:20:26Z"
+    message: ReplicaSet "dapr-sidecar-injector-7879dd599b" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  - lastTransitionTime: "2021-11-06T11:45:44Z"
+    lastUpdateTime: "2021-11-06T11:45:44Z"
+    message: Deployment does not have minimum availability.
+    reason: MinimumReplicasUnavailable
+    status: "False"
+    type: Available
+  observedGeneration: 1
+  replicas: 1
+  unavailableReplicas: 1
+  updatedReplicas: 1
