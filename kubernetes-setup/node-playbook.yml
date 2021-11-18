@@ -4,17 +4,14 @@
   tasks:
   - name: Set /etc/apt/source.list
     shell: |
-      echo 'deb-src http://mirrors.aliyun.com/ubuntu/ xenial main
-      deb http://mirrors.aliyun.com/ubuntu/ xenial-updates main
-      deb-src http://mirrors.aliyun.com/ubuntu/ xenial-updates main
-      deb http://mirrors.aliyun.com/ubuntu/ xenial universe
-      deb-src http://mirrors.aliyun.com/ubuntu/ xenial universe
-      deb http://mirrors.aliyun.com/ubuntu/ xenial-updates universe
-      deb-src http://mirrors.aliyun.com/ubuntu/ xenial-updates universe
-      deb http://mirrors.aliyun.com/ubuntu/ xenial-security main
-      deb-src http://mirrors.aliyun.com/ubuntu/ xenial-security main
-      deb http://mirrors.aliyun.com/ubuntu/ xenial-security universe
-      deb-src http://mirrors.aliyun.com/ubuntu/ xenial-security universe'  > /etc/apt/sources.list
+      echo 'deb http://mirrors.zju.edu.cn/ubuntu xenial main universe restricted multiverse
+      deb http://mirrors.zju.edu.cn/ubuntu xenial-security main universe restricted multiverse
+      deb http://mirrors.zju.edu.cn/ubuntu xenial-updates main universe restricted multiverse
+      deb http://mirrors.zju.edu.cn/ubuntu xenial-backports main universe restricted multiverse
+      deb-src http://mirrors.zju.edu.cn/ubuntu xenial main universe restricted multiverse
+      deb-src http://mirrors.zju.edu.cn/ubuntu xenial-security main universe restricted multiverse
+      deb-src http://mirrors.zju.edu.cn/ubuntu xenial-updates main universe restricted multiverse
+      deb-src http://mirrors.zju.edu.cn/ubuntu xenial-backports main universe restricted multiverse'  > /etc/apt/sources.list
 
   - name: Install packages that allow apt to be used over HTTPS
     apt:
