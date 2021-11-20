@@ -4,14 +4,14 @@
   tasks:
   - name: Set /etc/apt/source.list
     shell: |
-      echo 'deb http://mirrors.zju.edu.cn/ubuntu xenial main universe restricted multiverse
-      deb http://mirrors.zju.edu.cn/ubuntu xenial-security main universe restricted multiverse
-      deb http://mirrors.zju.edu.cn/ubuntu xenial-updates main universe restricted multiverse
-      deb http://mirrors.zju.edu.cn/ubuntu xenial-backports main universe restricted multiverse
-      deb-src http://mirrors.zju.edu.cn/ubuntu xenial main universe restricted multiverse
-      deb-src http://mirrors.zju.edu.cn/ubuntu xenial-security main universe restricted multiverse
-      deb-src http://mirrors.zju.edu.cn/ubuntu xenial-updates main universe restricted multiverse
-      deb-src http://mirrors.zju.edu.cn/ubuntu xenial-backports main universe restricted multiverse'  > /etc/apt/sources.list
+      echo 'deb http://mirrors.zju.edu.cn/ubuntu focal main universe restricted multiverse
+      deb http://mirrors.zju.edu.cn/ubuntu focal-security main universe restricted multiverse
+      deb http://mirrors.zju.edu.cn/ubuntu focal-updates main universe restricted multiverse
+      deb http://mirrors.zju.edu.cn/ubuntu focal-backports main universe restricted multiverse
+      deb-src http://mirrors.zju.edu.cn/ubuntu focal main universe restricted multiverse
+      deb-src http://mirrors.zju.edu.cn/ubuntu focal-security main universe restricted multiverse
+      deb-src http://mirrors.zju.edu.cn/ubuntu focal-updates main universe restricted multiverse
+      deb-src http://mirrors.zju.edu.cn/ubuntu focal-backports main universe restricted multiverse'  > /etc/apt/sources.list
 
   - name: Install packages that allow apt to be used over HTTPS
     apt:
